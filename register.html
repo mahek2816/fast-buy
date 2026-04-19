@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | FASTBUY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --header-color: #a33b5d;
+            --bg-color: #F8F4EE;
+            --text-dark: #2A2A2A;
+            --accent: #D495A1;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--header-color);
+        }
+        .navbar-brand, .navbar a {
+            color: var(--white) !important;
+        }
+        .navbar-brand img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Register Section */
+        .register-section {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 15px;
+        }
+
+        .register-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .register-card h3 {
+            font-weight: 700;
+            color: var(--header-color);
+            margin-bottom: 5px;
+        }
+
+        .register-card p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.15rem rgba(212,149,161,.25);
+        }
+
+        .btn-register {
+            background: var(--header-color);
+            color: var(--white);
+            border-radius: 50px;
+            padding: 10px;
+            font-weight: 600;
+        }
+
+        .btn-register:hover {
+            background: #8c2f4c;
+        }
+
+        .login-link a {
+            color: var(--header-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR (SAME AS INDEX) -->
+<nav class="navbar navbar-expand-lg shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="static/images/logo.jpg" alt="Logo">
+            <span>FASTBUY</span>
+        </a>
+        <div>
+            <a href="/" class="btn btn-outline-light me-2">Home</a>
+            <a href="/login" class="btn btn-light">Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- REGISTER FORM -->
+<section class="register-section">
+    <div class="register-card">
+        <div class="text-center mb-3">
+            <h3>Create Account</h3>
+            <p>Join FASTBUY and start shopping fast</p>
+        </div>
+
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="name" class="form-control" placeholder="Enter your name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Create password" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" placeholder="Confirm password" required>
+            </div>
+
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-register">
+                    Create Account
+                </button>
+            </div>
+
+            <div class="text-center login-link">
+                Already have an account?
+                <a href="/login">Login</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

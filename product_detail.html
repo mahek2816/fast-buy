@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ product.name }} | FASTBUY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body {
+    background:#f6f7f9;
+    font-family:'Segoe UI',sans-serif;
+    margin-bottom:150px;
+}
+
+/* NAVBAR */
+.navbar{ background:#a33b5d; }
+.navbar img{ border-radius:50%; border:2px solid #fff; }
+.navbar .btn-light{ font-weight:600; transition:0.3s; }
+.navbar .btn-light:hover{ background:#f1f1f1; }
+
+/* PAGE WRAPPER */
+.page-wrapper{
+    max-width:1200px;
+    margin:20px auto;
+    padding:0 15px;
+}
+
+/* PRODUCT SECTION */
+.product-section{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    background:#fff;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.product-images{
+    flex:1 1 350px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.main-image{
+    width:100%;
+    border-radius:18px;
+    overflow:hidden;
+    background:#f9f9f9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+.main-image img{
+    width:100%;
+    max-height:400px;
+    object-fit:contain;
+    transition:transform 0.3s;
+}
+.main-image:hover img{
+    transform: scale(1.05);
+}
+.thumbnails{
+    display:flex;
+    gap:10px;
+}
+.thumbnails img{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+    border-radius:12px;
+    border:2px solid transparent;
+    cursor:pointer;
+    transition:0.3s;
+}
+.thumbnails img:hover, .thumbnails img.active{
+    border-color:#a33b5d;
+}
+
+/* DETAILS */
+.product-details{
+    flex:1 1 400px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+.product-name{ font-weight:700; font-size:1.5rem; margin-bottom:10px; }
+.star-rating{ color:#f2b01e; font-size:1rem; margin-bottom:10px; }
+.product-quantity{ color:#555; font-size:.9rem; margin-bottom:10px; }
+.product-price{
+    font-weight:800;
+    color:#2e7d32;
+    font-size:1.4rem;
+    margin-bottom:15px;
+}
+.product-price small{ text-decoration:line-through; color:#999; margin-left:8px; font-weight:400; }
+
+/* BADGES */
+.badges{
+    display:flex;
+    gap:5px;
+    margin-bottom:10px;
+}
+.badges span{
+    background:#a33b5d;
+    color:#fff;
+    font-size:.75rem;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:12px;
+}
+
+/* ADD TO CART */
+.add-to-cart{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-bottom:15px;
+}
+.qty-control{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.qty-control button{
+    border:none;
+    background:#a33b5d;
+    color:#fff;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+.qty-control button:hover{ background:#7e2d47; }
+.qty-control input{
+    width:50px;
+    text-align:center;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-weight:600;
+}
+
+/* COLLAPSIBLE SECTIONS */
+.collapsible-section{
+    margin-top:20px;
+}
+.collapsible-section h6{
+    font-weight:700;
+    cursor:pointer;
+    color:#a33b5d;
+}
+.collapsible-content{
+    display:none;
+    padding:10px 0;
+    font-size:.95rem;
+    color:#444;
+}
+
+/* SIMILAR PRODUCTS */
+.similar-products{
+    margin-top:30px;
+}
+.similar-products h6{ font-weight:700; margin-bottom:15px; }
+.similar-products-slider{
+    display:flex;
+    gap:15px;
+    overflow-x:auto;
+    padding-bottom:5px;
+}
+.similar-products-slider::-webkit-scrollbar{ display:none; }
+.similar-products .product-card{
+    background:#fff;
+    border-radius:15px;
+    padding:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+    transition:0.3s;
+    text-align:center;
+    min-width:150px;
+    flex-shrink:0;
+}
+.similar-products .product-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+.similar-products img{
+    height:100px;
+    width:auto;
+    margin-bottom:5px;
+}
+.similar-products .price{ font-weight:700; color:#2e7d32; font-size:1rem; }
+
+/* STICKY CART BAR */
+#cartBar{
+    display:none;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#2e7d32;
+    color:#fff;
+    padding:12px 18px;
+    z-index:999;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 -3px 15px rgba(0,0,0,0.2);
+    border-top-left-radius:12px;
+    border-top-right-radius:12px;
+}
+.clear-cart{ background:transparent; border:none; color:#fff; font-size:.85rem; text-decoration:underline; cursor:pointer; }
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .product-section{ flex-direction:column; }
+    .main-image img{ max-height:300px; }
+}
+
+.similar-products-slider{
+    display:flex;
+    gap:15px;
+    overflow-x:auto;
+    padding-bottom:5px;
+    scroll-behavior: smooth;
+}
+.similar-products-slider::-webkit-scrollbar{ display:none; }
+.product-card{
+    background:#fff;
+    border-radius:12px;
+    padding:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+    transition:0.3s;
+    text-align:center;
+    min-width:140px;
+    flex-shrink:0;
+}
+.product-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+.product-card img{
+    height:100px;
+    width:auto;
+    margin-bottom:5px;
+    border-radius:8px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="42" height="42">
+        <span class="ms-2 fw-bold">FASTBUY</span>
+    </a>
+    <div class="ms-auto">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm me-2">Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Logout</a>
+    </div>
+</div>
+</nav>
+
+<div class="page-wrapper container">
+
+<!-- PRODUCT SECTION -->
+<div class="product-section">
+
+    <!-- IMAGE -->
+    <div class="product-images">
+        <div class="main-image" id="mainImage">
+            <img src="{{ url_for('static', filename='products/' ~ product.image) }}" alt="{{ product.name }}">
+        </div>
+        {% if product.get('images') %}
+        <div class="thumbnails">
+            {% for img in product.images %}
+            <img src="{{ url_for('static', filename='products/' ~ img) }}" class="thumb-img" onclick="changeImage(this)">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- DETAILS -->
+    <div class="product-details">
+        <div>
+            <div class="badges">
+                {% if product.get('is_new',0) %}<span>New</span>{% endif %}
+                {% if product.get('is_offer',0) %}<span>Offer</span>{% endif %}
+                {% if product.get('is_best',0) %}<span>Best Seller</span>{% endif %}
+            </div>
+
+            <h4 class="product-name">{{ product.name }}</h4>
+
+            <div class="star-rating">
+    {% set rating = product.get('avg_rating',0)|float %}
+    
+    {% for i in range(1,6) %}
+        {% if rating >= i %}
+            <i class="bi bi-star-fill text-warning"></i>
+        {% elif rating >= i-0.5 %}
+            <i class="bi bi-star-half text-warning"></i>
+        {% else %}
+            <i class="bi bi-star text-warning"></i>
+        {% endif %}
+    {% endfor %}
+    
+    <span class="ms-2 text-muted">
+        ({{ rating }} ⭐ | {{ product.get('total_ratings',0) }} Reviews)
+    </span>
+</div>
+
+        
+
+            <div class="product-quantity">{{ product.get('quantity','') }}</div>
+
+            <div class="product-price">
+                ₹{{ product.price }}
+                {% if product.get('original_price') %}<small>₹{{ product.original_price }}</small>{% endif %}
+            </div>
+
+            <!-- ADD TO CART -->
+            <div class="add-to-cart">
+                <div class="qty-box" data-id="{{ product.id }}" data-price="{{ product.price }}">
+                    <button class="btn add-btn" onclick="addItem(event, this)">ADD</button>
+                </div>
+            </div>
+
+            <!-- COLLAPSIBLE SECTIONS -->
+            <div class="collapsible-section">
+                <h6 onclick="toggleSection('desc')">Description</h6>
+                <div class="collapsible-content" id="desc">{{ product.get('description','No description available') }}</div>
+            </div>
+
+            <div class="collapsible-section">
+                <h6 onclick="toggleSection('features')">Features</h6>
+                <div class="collapsible-content" id="features">
+                    {% if product.get('features') %}
+                        <ul>
+                        {% for f in product.features %}<li>{{ f }}</li>{% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No features available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <h6 onclick="toggleSection('specs')">Specifications</h6>
+                <div class="collapsible-content" id="specs">
+                    {% if product.get('specifications') %}
+                        <table class="table table-sm">
+                        {% for key,value in product.specifications.items() %}
+                        <tr><td><strong>{{ key }}</strong></td><td>{{ value }}</td></tr>
+                        {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>No specifications available.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="collapsible-section">
+                <h6 onclick="toggleSection('reviews')">Customer Reviews</h6>
+                <div class="collapsible-content" id="reviews">
+                    {% if product.get('reviews') %}
+                        {% for r in product.reviews %}
+                        <div class="mb-2">
+                            <div>
+                                {% set rating = r.get('rating',0) | int %}
+                                {% for i in range(1,6) %}
+                                    {% if i <= rating %}<i class="bi bi-star-fill"></i>{% else %}<i class="bi bi-star"></i>{% endif %}
+                                {% endfor %}
+                                <strong>{{ r.get('user','Anonymous') }}</strong>
+                            </div>
+                            <div>{{ r.get('comment','') }}</div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No reviews yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<!-- RELATED PRODUCTS -->
+<div class="similar-products">
+    <h6>Related Products</h6>
+    <div class="similar-products-slider">
+        {% for p in similar_products %}
+        <a href="{{ url_for('product_detail', product_id=p.id) }}" class="text-decoration-none text-dark">
+            <div class="product-card">
+                <img src="{{ url_for('static', filename='products/' ~ p.image) }}" alt="{{ p.name }}">
+                <div class="mt-2 fw-bold">{{ p.name }}</div>
+                <div class="price">₹{{ p.price }}</div>
+                <div class="mt-1 qty-box" data-id="{{ p.id }}" data-price="{{ p.price }}">
+                    <button class="btn btn-sm btn-success w-100" onclick="addItem(event, this)">Add</button>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+</div>
+
+<!-- CART BAR -->
+<div id="cartBar">
+    <div>
+        <strong>
+            <span id="cartItems">0</span> Items | ₹<span id="cartPrice">0</span>
+        </strong>
+        <button class="clear-cart ms-2" onclick="clearCart()">Clear</button>
+    </div>
+    <a href="{{ url_for('checkout') }}" class="btn btn-light btn-sm fw-bold">
+        Checkout → 
+    </a>
+</div>
+
+<script>
+// ================= CART LOGIC =================
+let cart = JSON.parse(localStorage.getItem("cart")) || {};
+let totalItems = 0;
+let totalPrice = 0;
+
+window.onload = () => {
+    for (let id in cart) {
+        totalItems += cart[id].qty;
+        totalPrice += cart[id].qty * cart[id].price;
+        const box = document.querySelector(`[data-id="${id}"]`);
+        if(box){ box.innerHTML = qtyHTML(id, cart[id].qty); }
+    }
+    updateCart();
+};
+
+// ADD TO CART
+// ADD TO CART (without navigating)
+function addItem(event, btn){
+    if(event) event.preventDefault();  // Safe check
+
+    const box = btn.parentElement;
+    const id = box.dataset.id;
+    const price = parseFloat(box.dataset.price);
+
+    if(!cart[id]){
+        cart[id] = {qty:1, price};
+    } else{
+        cart[id].qty++;
+    }
+
+    totalItems++;
+    totalPrice += price;
+
+    box.innerHTML = qtyHTML(id, cart[id].qty);
+
+    saveCart();
+    updateCart();
+}
+
+// UPDATE QTY
+function updateQty(id, change){
+    if(!cart[id]) return;
+    cart[id].qty += change;
+    totalItems += change;
+    totalPrice += cart[id].price * change;
+    const box = document.querySelector(`[data-id="${id}"]`);
+    if(cart[id].qty <=0){ delete cart[id]; box.innerHTML=`<button class="btn add-btn" onclick="addItem(event, this)">ADD</button>`; }
+    else{ document.getElementById(`qty-${id}`).value = cart[id].qty; }
+    saveCart(); updateCart();
+}
+
+// CART BAR
+function updateCart(){
+    const bar=document.getElementById("cartBar");
+    if(totalItems<=0){ bar.style.display="none"; return; }
+    bar.style.display="flex";
+    document.getElementById("cartItems").innerText=totalItems;
+    document.getElementById("cartPrice").innerText=totalPrice.toFixed(2);
+}
+
+// SAVE
+function saveCart(){ localStorage.setItem("cart", JSON.stringify(cart)); }
+
+// CLEAR
+function clearCart(){ localStorage.removeItem("cart"); location.reload(); }
+
+// HTML HELPER
+function qtyHTML(id,qty){
+    return `<div class="qty-control">
+        <button onclick="updateQty('${id}',-1)">-</button>
+        <input type="text" id="qty-${id}" value="${qty}" readonly>
+        <button onclick="updateQty('${id}',1)">+</button>
+    </div>`;
+}
+
+// THUMBNAIL IMAGE CHANGE
+function changeImage(el){
+    const mainImg = document.getElementById("mainImage").querySelector("img");
+    mainImg.src = el.src;
+    document.querySelectorAll(".thumb-img").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+}
+
+// COLLAPSIBLE SECTIONS
+function toggleSection(id){
+    const el = document.getElementById(id);
+    el.style.display = el.style.display==='block' ? 'none' : 'block';
+}
+</script>
+
+</body>
+</html>

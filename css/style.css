@@ -1,0 +1,70 @@
+body {
+    background: #F9FAFB;
+    color: #111827;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* LOGO */
+.logo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* BRAND */
+.brand-text {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* HERO */
+.hero-section {
+    padding: 100px 0;
+}
+
+.hero-section h1 {
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.hero-text {
+    font-size: 18px;
+    color: #4B5563;
+    max-width: 600px;
+    margin: auto;
+}
+
+/* FEATURE CARD */
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-img{
+    height:150px;
+    object-fit:contain;
+    padding:10px;
+}
+
+.product-card{
+    border-radius:15px;
+}
+
+.qty-box{
+    display:flex;
+    gap:5px;
+    align-items:center;
+}
+
+.qty{
+    width:20px;
+    text-align:center;
+}

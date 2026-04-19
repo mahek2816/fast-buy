@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ category.name }} | FASTBUY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap & Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{
+    background:#f6f7f9;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* NAVBAR */
+.navbar{ background:#a33b5d; }
+.navbar img{
+    border-radius:50%;
+    border:2px solid #fff;
+}
+.navbar .btn-light{
+    font-weight:600;
+    transition:0.3s;
+}
+.navbar .btn-light:hover{
+    background:#f1f1f1;
+}
+
+/* PAGE WRAPPER */
+.page-wrapper{
+    max-width:1200px;
+    margin:25px auto 100px;
+}
+
+/* LOCATION */
+#locationBar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    padding:10px 20px;
+    border-radius:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom:20px;
+    font-size:.95rem;
+}
+#locationBar i{ color:#a33b5d; }
+
+/* SEARCH BOX */
+.search-box{
+    position:relative;
+    margin-bottom:25px;
+}
+.search-box input{
+    border-radius:30px;
+    padding-left:40px;
+    padding-right:20px;
+    height:42px;
+    border:1px solid #ddd;
+    transition:0.3s;
+}
+.search-box input:focus{
+    box-shadow:0 4px 12px rgba(163,59,93,0.3);
+    border:1px solid #a33b5d;
+}
+.search-box i{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#a33b5d;
+    font-size:1.1rem;
+}
+
+/* PRODUCT CARD */
+.product-card{
+    background:#fff;
+    border-radius:18px;
+    padding:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    transition:0.3s;
+}
+.product-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 35px rgba(0,0,0,.1);
+}
+.product-card img{
+    width:100%;
+    height:140px;
+    object-fit:contain;
+    margin-bottom:10px;
+}
+
+/* NAME & INFO */
+.product-card h6{
+    font-weight:700;
+    font-size:.95rem;
+    margin-bottom:2px;
+}
+.product-card small{
+    font-size:.8rem;
+    color:#555;
+}
+
+/* PRICE */
+.price{
+    font-weight:800;
+    color:#2e7d32;
+    font-size:1rem;
+}
+
+/* ADD / QTY BUTTONS */
+.add-btn{
+    background:#a33b5d;
+    color:#fff;
+    border-radius:20px;
+    font-size:.8rem;
+    padding:5px 14px;
+    font-weight:600;
+    transition:0.3s;
+    cursor:pointer;
+}
+.add-btn:hover{
+    background:#7e2d47;
+}
+.qty-control{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+.qty-control button{
+    border:none;
+    background:#a33b5d;
+    color:#fff;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+.qty-control button:hover{
+    background:#7e2d47;
+}
+
+/* CART BAR */
+#cartBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#2e7d32;
+    color:#fff;
+    padding:12px 18px;
+    z-index:999;
+    display:none;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 -5px 15px rgba(0,0,0,0.2);
+
+}
+#cartBar a{
+    color:#d3b0be;
+    text-decoration:none;
+    font-weight:600;
+}
+.clear-cart{
+    background:transparent;
+    border:none;
+    color:#fff;
+    font-size:.85rem;
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.checkout-btn{
+    background:#7e2d47;
+    color:#fff !important;
+    font-weight:700;
+    padding:10px 26px;
+    border-radius:12px;
+    transition:0.3s;
+}
+
+.checkout-btn:hover{
+    background:#1b5e20;
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="42" height="42">
+        <span class="ms-2 fw-bold">FASTBUY</span>
+    </a>
+    <div class="ms-auto">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm me-2">Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Logout</a>
+    </div>
+</div>
+</nav>
+
+<!-- PAGE -->
+<div class="page-wrapper container">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold">{{ category.name }}</h5>
+        <a href="{{ url_for('all_categories') }}" class="text-decoration-none">← Categories</a>
+    </div>
+
+    <!-- LOCATION -->
+    <div id="locationBar">
+        <i class="bi bi-geo-alt-fill"></i>
+        <span id="userLocation">Detecting location...</span>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" id="searchInput" class="form-control" placeholder="Search in {{ category.name }}">
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="row g-4" id="productGrid">
+        {% for p in products %}
+        <div class="col-6 col-md-4 col-lg-3 product-item">
+            <div class="product-card">
+    <a href="{{ url_for('product_detail', product_id=p.id) }}">
+        <img src="{{ url_for('static', filename='products/' ~ p.image) }}">
+    </a>
+
+    <h6 class="product-name">
+        <a href="{{ url_for('product_detail', product_id=p.id) }}" class="text-decoration-none text-dark">
+            {{ p.name }}
+        </a>
+    </h6>
+
+    <small class="text-muted">{{ p.quantity }}</small>
+
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <div class="price">₹{{ p.price }}</div>
+       <div class="qty-box" data-id="{{ p.id }}" data-price="{{ p.price }}">
+
+{% if cart[p.id|string] %}
+    <div class="qty-control">
+        <button onclick="updateQty('{{ p.id }}',-1)">-</button>
+        <span id="qty-{{ p.id }}">{{ cart[p.id|string] }}</span>
+        <button onclick="updateQty('{{ p.id }}',1)">+</button>
+    </div>
+{% else %}
+    <button class="btn btn-sm add-btn" onclick="addItem(this)">ADD</button>
+{% endif %}
+
+</div>
+
+    </div>
+</div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- CART BAR -->
+<div id="cartBar">
+    <div>
+        <strong>
+           <span id="cartItems">{{ total_items }}</span> Items |
+₹<span id="cartPrice">{{ total_price }}</span>
+
+        </strong>
+        <button class="clear-cart ms-2" onclick="clearCart()">Clear</button>
+    </div>
+    <div class="text-end mt-3">
+    <a href="{{ url_for('checkout') }}" class="checkout-btn">
+    Checkout
+</a>
+
+
+</div>
+
+
+</div>
+
+<script>
+
+let totalItems = {{ total_items }};
+let totalPrice = {{ total_price }};
+updateCartBar();
+
+
+// ADD ITEM
+function addItem(btn){
+    const box = btn.parentElement;
+    const id = box.dataset.id;
+    const price = parseFloat(box.dataset.price);
+
+    fetch("/update_cart",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ product_id:id, change:1 })
+    })
+    .then(()=> {
+        totalItems++;
+        totalPrice += price;
+        box.innerHTML = qtyHTML(id, 1);
+        updateCartBar();
+    });
+}
+
+// UPDATE QTY
+function updateQty(id, change){
+    const box = document.querySelector(`[data-id="${id}"]`);
+    const price = parseFloat(box.dataset.price);
+
+    fetch("/update_cart",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ product_id:id, change:change })
+    })
+    .then(()=>{
+        totalItems += change;
+        totalPrice += price * change;
+
+        let qtySpan = document.getElementById(`qty-${id}`);
+        let qty = qtySpan ? parseInt(qtySpan.innerText) + change : 0;
+
+        if(qty <= 0){
+            box.innerHTML = `<button class="btn btn-sm add-btn" onclick="addItem(this)">ADD</button>`;
+        }else{
+            qtySpan.innerText = qty;
+        }
+        updateCartBar();
+    });
+}
+
+// CART BAR
+function updateCartBar(){
+    const bar = document.getElementById("cartBar");
+    if(totalItems <= 0){
+        bar.style.display = "none";
+        return;
+    }
+    bar.style.display = "flex";
+    document.getElementById("cartItems").innerText = totalItems;
+    document.getElementById("cartPrice").innerText = totalPrice.toFixed(2);
+}
+
+// QTY HTML
+function qtyHTML(id,qty){
+    return `<div class="qty-control">
+        <button onclick="updateQty('${id}',-1)">-</button>
+        <span id="qty-${id}">${qty}</span>
+        <button onclick="updateQty('${id}',1)">+</button>
+    </div>`;
+}
+
+
+function clearCart(){
+    fetch("/clear_cart", { method:"POST" })
+    .then(()=>{
+        totalItems = 0;
+        totalPrice = 0;
+        document.getElementById("cartBar").style.display = "none";
+
+        document.querySelectorAll(".qty-box").forEach(box=>{
+            box.innerHTML = `<button class="btn btn-sm add-btn" onclick="addItem(this)">ADD</button>`;
+        });
+    });
+}
+
+
+</script>
+
+</body>
+</html>

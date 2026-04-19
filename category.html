@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Categories | FASTBUY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{
+    background:linear-gradient(180deg,#f6f7f9,#fdfdfd);
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* Navbar */
+.navbar{
+    background:#a33b5d;
+}
+.navbar img{
+    border-radius:40%;
+    border:2px solid #fff;
+}
+
+/* Wrapper */
+.category-wrapper{
+    max-width:1150px;
+    margin:50px auto;
+}
+
+/* Main card */
+.category-shell{
+    background:rgba(255,255,255,.95);
+    border-radius:22px;
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+    padding:40px;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Decorative gradient */
+.category-shell::before{
+    content:"";
+    position:absolute;
+    top:-120px;
+    right:-120px;
+    width:260px;
+    height:260px;
+    background:radial-gradient(circle,#ffb3c6,#a33b5d);
+    opacity:.15;
+    border-radius:50%;
+}
+
+/* Title */
+.page-title{
+    display:flex;
+    align-items:center;
+    margin-bottom:20px;
+}
+.page-title i{
+    font-size:1.4rem;
+    color:#a33b5d;
+    margin-right:12px;
+}
+.page-title h5{
+    font-weight:800;
+    margin:0;
+}
+
+/* Search bar */
+#categorySearch{
+    width:100%;
+    max-width:300px;
+    margin-bottom:25px;
+    padding-left:14px;
+    padding-right:35px;
+    border-radius:50px;
+    border:1px solid #ccc;
+}
+#categorySearch:focus{
+    border-color:#a33b5d;
+    box-shadow:0 0 5px rgba(163,59,93,.25);
+}
+
+/* Category card */
+.cat-card{
+    background:#fff;
+    border-radius:20px;
+    padding:26px 20px;
+    text-align:center;
+    height:100%;
+    border:1px solid #eee;
+    transition:.35s ease;
+    position:relative;
+}
+.cat-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 25px 45px rgba(163,59,93,.25);
+    border-color:#f0c9d6;
+}
+.cat-card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:20px;
+    background:linear-gradient(135deg,#ffd6e4,#ffffff);
+    opacity:0;
+    transition:.35s;
+    z-index:-1;
+}
+.cat-card:hover::after{
+    opacity:1;
+}
+
+/* Image */
+/* CATEGORY CARD */
+.cat-card{
+    background:#fff;
+    border-radius:20px;
+    border:1px solid #eee;
+    text-align:center;
+    transition:.35s ease;
+    height:100%;
+    overflow:hidden;                 /* IMPORTANT */
+    display:flex;
+    flex-direction:column;
+}
+
+/* IMAGE CONTAINER */
+.cat-img-box{
+    width:100%;
+    height:170px;                    /* PERFECT SIZE */
+    background:#f5f5f5;
+}
+
+/* IMAGE */
+.cat-img-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;                /* REAL WORLD */
+}
+
+/* TEXT AREA */
+.cat-card h6{
+    font-weight:700;
+    margin:14px 0 4px;
+}
+
+.cat-card small{
+    margin-bottom:14px;
+}
+
+/* HOVER EFFECT */
+.cat-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 20px 40px rgba(163,59,93,.25);
+    border-color:#f0c9d6;
+}
+
+/* Badge */
+.cat-badge{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:#a33b5d;
+    color:#fff;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.75rem;
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .category-shell{
+        padding:28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="45">
+        <span class="ms-2 fw-bold">FASTBUY</span>
+    </a>
+    <div class="ms-auto">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm me-2">Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Logout</a>
+    </div>
+</div>
+</nav>
+
+<!-- PAGE -->
+<div class="category-wrapper">
+<div class="category-shell">
+
+    <!-- HEADER -->
+    <div class="page-title">
+        <i class="bi bi-grid-fill"></i>
+        <h5>Shop by Category</h5>
+    </div>
+
+    <!-- SEARCH BAR -->
+    <input type="text" id="categorySearch" placeholder="Search categories...">
+
+    <!-- GRID -->
+    <div class="row g-4">
+        {% for cat in categories %}
+        <div class="col-6 col-md-4 col-lg-3 cat-item">
+
+            <a href="{{ url_for('category_products', category_id=cat.id) }}"
+               class="text-decoration-none text-dark">
+
+                <div class="cat-card">
+    <span class="cat-badge">Explore</span>
+
+    <div class="cat-img-box">
+        <img src="{{ url_for('static', filename='categories/' ~ cat.image) }}"
+             alt="{{ cat.name }}">
+    </div>
+
+    <h6>{{ cat.name }}</h6>
+    <small class="text-muted">View products</small>
+</div>
+
+
+            </a>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- SEARCH SCRIPT -->
+<script>
+const searchInput = document.getElementById("categorySearch");
+const categoryItems = document.querySelectorAll(".cat-item");
+
+searchInput.addEventListener("input", () => {
+    const val = searchInput.value.toLowerCase();
+    categoryItems.forEach(item => {
+        const name = item.querySelector("h6").textContent.toLowerCase();
+        item.style.display = name.includes(val) ? "block" : "none";
+    });
+});
+</script>
+</body>
+</html>

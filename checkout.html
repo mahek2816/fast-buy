@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Checkout | FASTBUY</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+body{ background:#f6f7f9; font-family:'Segoe UI',sans-serif; }
+
+/* Navbar */
+.navbar{ background:#a33b5d; }
+.navbar img{ border-radius:40%; border:2px solid #fff; }
+
+/* Page wrapper */
+.checkout-wrapper{ max-width:1100px; margin:45px auto; }
+
+/* Main card */
+.checkout-card{ background:#fff; border-radius:18px; box-shadow:0 15px 40px rgba(0,0,0,.08); overflow:hidden; }
+
+/* Left panel */
+.cart-left{ background:#fafafa; padding:30px; border-right:1px solid #eee; }
+.cart-item{ display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #eee; padding:12px 0; }
+.cart-item img{ width:70px; height:70px; object-fit:cover; border-radius:8px; }
+.cart-left h4{ margin-bottom:20px; }
+
+/* Right panel */
+.cart-right{ padding:35px; }
+.cart-right h5{ margin-bottom:20px; }
+
+/* Form inputs */
+.form-control{ border-radius:10px; padding:10px 14px; }
+.form-control:focus{ border-color:#a33b5d; box-shadow:0 0 0 3px rgba(163,59,93,.15); }
+
+/* Buttons */
+.btn-main{ background:#28a745; color:#fff; border-radius:22px; padding:8px 30px; font-weight:600; }
+.btn-main:hover{ background:#218838; }
+
+/* Responsive */
+@media(max-width:768px){ .cart-left{ border-right:none; border-bottom:1px solid #eee; } }
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+<div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('dashboard') }}">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="45">
+        <span class="ms-2 fw-bold">FASTBUY</span>
+    </a>
+    <div class="ms-auto">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm me-2">Dashboard</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Logout</a>
+    </div>
+</div>
+</nav>
+
+<!-- Main Card -->
+<div class="checkout-wrapper">
+<div class="checkout-card row g-0">
+
+  <!-- LEFT PANEL: Cart Items -->
+  <div class="col-md-8 cart-left">
+    <h4>Your Cart</h4>
+    {% if items %}
+      {% for item in items %}
+        <div class="cart-item" data-id="{{ item.id }}">
+          <img src="{{ url_for('static', filename='products/' ~ item.image) }}" alt="{{ item.name }}">
+          <div class="flex-grow-1 ms-3">
+            <h6>{{ item.name }}</h6>
+            <div class="d-flex align-items-center mt-2">
+              <button class="btn btn-sm btn-secondary me-1 update-cart" data-change="-1">-</button>
+              <input type="text" value="{{ item.qty }}" readonly class="form-control text-center" style="width:50px;">
+              <button class="btn btn-sm btn-secondary ms-1 update-cart" data-change="1">+</button>
+              <button class="btn btn-sm btn-danger ms-3 remove-item">Remove</button>
+            </div>
+          </div>
+          <div>₹<span class="item-total">{{ item.total }}</span></div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Your cart is empty.</p>
+      <a href="{{ url_for('all_categories') }}" class="btn btn-secondary mt-2">Continue Shopping</a>
+    {% endif %}
+  </div>
+
+  <!-- RIGHT PANEL: Payment Form -->
+  <div class="col-md-4 cart-right">
+    <h5>Payment & Order</h5>
+    <form method="POST" action="{{ url_for('place_order') }}">
+      <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label>Address</label>
+        <textarea name="address" class="form-control" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label>Payment Method</label>
+        <select name="payment_method" class="form-control" required>
+          <option value="COD">Cash on Delivery</option>
+          <option value="UPI">UPI</option>
+          <option value="Card">Card</option>
+          <option value="Wallet">Wallet</option>
+        </select>
+      </div>
+      <h5>Total: ₹<span id="total">{{ total }}</span></h5>
+      <button type="submit" class="btn btn-main w-100 mt-3" {% if not items %}disabled{% endif %}>Place Order</button>
+    </form>
+  </div>
+
+</div>
+</div>
+
+<!-- jQuery (REQUIRED) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function(){
+
+  $(".update-cart").click(function(){
+    let parent = $(this).closest(".cart-item");
+    let pid = parent.data("id");
+    let change = $(this).data("change");
+
+    $.ajax({
+      url: "{{ url_for('update_cart') }}",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({
+        product_id: pid,
+        change: change
+      }),
+      success: function(){
+        location.reload();
+      }
+    });
+  });
+
+  $(".remove-item").click(function(){
+    let parent = $(this).closest(".cart-item");
+    let pid = parent.data("id");
+
+    $.ajax({
+      url: "{{ url_for('update_cart') }}",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({
+        product_id: pid,
+        change: -1000
+      }),
+      success: function(){
+        location.reload();
+      }
+    });
+  });
+
+});
+</script>
+
+</body>
+</html>
